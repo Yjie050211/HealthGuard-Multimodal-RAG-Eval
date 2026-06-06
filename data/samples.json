@@ -1,0 +1,50 @@
+[
+  {
+    "id": "case_001",
+    "scenario": "fall",
+    "event_description": "老人从站立状态突然倒地，随后长时间未恢复站立。",
+    "ground_truth": {
+      "is_abnormal": true,
+      "event_type": "fall",
+      "risk_level": "high",
+      "evidence": "由站立变为地面卧倒，且持续时间较长。",
+      "suggestion": "应立即进行二次确认，并通知家属或护理人员。"
+    }
+  },
+  {
+    "id": "case_002",
+    "scenario": "long_static",
+    "event_description": "老人坐在沙发上超过两小时未明显移动，但处于正常坐姿。",
+    "ground_truth": {
+      "is_abnormal": true,
+      "event_type": "long_static",
+      "risk_level": "medium",
+      "evidence": "长时间静止，但姿态未显示明显跌倒。",
+      "suggestion": "建议先进行语音确认，再根据反馈决定是否报警。"
+    }
+  },
+  {
+    "id": "case_003",
+    "scenario": "occlusion",
+    "event_description": "摄像头画面被家具部分遮挡，仅能看到人体下半身。",
+    "ground_truth": {
+      "is_abnormal": true,
+      "event_type": "occlusion_uncertain",
+      "risk_level": "medium",
+      "evidence": "视觉信息不完整，无法稳定判断是否跌倒。",
+      "suggestion": "应降低自动判断置信度，并触发人工复核。"
+    }
+  },
+  {
+    "id": "case_004",
+    "scenario": "normal_activity",
+    "event_description": "老人从卧室走到客厅，随后坐在椅子上休息。",
+    "ground_truth": {
+      "is_abnormal": false,
+      "event_type": "normal",
+      "risk_level": "low",
+      "evidence": "活动过程连续，姿态变化符合正常生活行为。",
+      "suggestion": "无需报警，仅记录日常活动状态。"
+    }
+  }
+]
