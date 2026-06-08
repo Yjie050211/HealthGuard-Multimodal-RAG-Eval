@@ -2,49 +2,161 @@
   {
     "id": "case_001",
     "scenario": "fall",
+    "input_type": "text",
     "event_description": "老人从站立状态突然倒地，随后长时间未恢复站立。",
+    "image_path": "",
     "ground_truth": {
       "is_abnormal": true,
       "event_type": "fall",
       "risk_level": "high",
-      "evidence": "由站立变为地面卧倒，且持续时间较长。",
-      "suggestion": "应立即进行二次确认，并通知家属或护理人员。"
+      "visual_evidence": "由站立变为地面卧倒，且持续时间较长。",
+      "suggested_action": "立即进行二次确认，并通知家属或护理人员。",
+      "uncertainty": false,
+      "need_rag": true
     }
   },
   {
     "id": "case_002",
     "scenario": "long_static",
+    "input_type": "text",
     "event_description": "老人坐在沙发上超过两小时未明显移动，但处于正常坐姿。",
+    "image_path": "",
     "ground_truth": {
       "is_abnormal": true,
       "event_type": "long_static",
       "risk_level": "medium",
-      "evidence": "长时间静止，但姿态未显示明显跌倒。",
-      "suggestion": "建议先进行语音确认，再根据反馈决定是否报警。"
+      "visual_evidence": "长时间静止，但姿态未显示明显跌倒。",
+      "suggested_action": "建议先进行语音确认，再根据反馈决定是否报警。",
+      "uncertainty": true,
+      "need_rag": true
     }
   },
   {
     "id": "case_003",
     "scenario": "occlusion",
-    "event_description": "摄像头画面被家具部分遮挡，仅能看到人体下半身。",
+    "input_type": "text",
+    "event_description": "摄像头画面被家具遮挡，只能看到人体下半身，无法判断上半身姿态。",
+    "image_path": "",
     "ground_truth": {
       "is_abnormal": true,
       "event_type": "occlusion_uncertain",
       "risk_level": "medium",
-      "evidence": "视觉信息不完整，无法稳定判断是否跌倒。",
-      "suggestion": "应降低自动判断置信度，并触发人工复核。"
+      "visual_evidence": "视觉信息不完整，存在误判风险。",
+      "suggested_action": "降低自动判断置信度，触发人工复核或多源确认。",
+      "uncertainty": true,
+      "need_rag": true
     }
   },
   {
     "id": "case_004",
     "scenario": "normal_activity",
-    "event_description": "老人从卧室走到客厅，随后坐在椅子上休息。",
+    "input_type": "text",
+    "event_description": "老人从卧室缓慢走到客厅，随后坐在椅子上休息。",
+    "image_path": "",
     "ground_truth": {
       "is_abnormal": false,
       "event_type": "normal",
       "risk_level": "low",
-      "evidence": "活动过程连续，姿态变化符合正常生活行为。",
-      "suggestion": "无需报警，仅记录日常活动状态。"
+      "visual_evidence": "活动过程连续，行为符合正常生活场景。",
+      "suggested_action": "无需报警，仅记录日常活动状态。",
+      "uncertainty": false,
+      "need_rag": false
+    }
+  },
+  {
+    "id": "case_005",
+    "scenario": "wandering",
+    "input_type": "text",
+    "event_description": "老人夜间在客厅和走廊之间反复来回走动超过 40 分钟。",
+    "image_path": "",
+    "ground_truth": {
+      "is_abnormal": true,
+      "event_type": "wandering",
+      "risk_level": "medium",
+      "visual_evidence": "夜间长时间重复行走，存在异常徘徊可能。",
+      "suggested_action": "记录徘徊频率并提醒家属关注认知状态或睡眠问题。",
+      "uncertainty": true,
+      "need_rag": true
+    }
+  },
+  {
+    "id": "case_006",
+    "scenario": "weak_light",
+    "input_type": "text",
+    "event_description": "夜间房间光线较暗，画面中人体轮廓模糊，模型难以识别姿态。",
+    "image_path": "",
+    "ground_truth": {
+      "is_abnormal": true,
+      "event_type": "low_visibility_uncertain",
+      "risk_level": "medium",
+      "visual_evidence": "弱光导致视觉信息不足，异常判断不可靠。",
+      "suggested_action": "提示环境感知质量不足，并触发二次确认。",
+      "uncertainty": true,
+      "need_rag": true
+    }
+  },
+  {
+    "id": "case_007",
+    "scenario": "fall_recovery",
+    "input_type": "text",
+    "event_description": "老人疑似摔倒后很快自行站起，并继续正常行走。",
+    "image_path": "",
+    "ground_truth": {
+      "is_abnormal": true,
+      "event_type": "fall_recovery",
+      "risk_level": "medium",
+      "visual_evidence": "出现短时倒地动作，但随后恢复站立。",
+      "suggested_action": "记录事件并提醒家属确认是否受伤。",
+      "uncertainty": true,
+      "need_rag": true
+    }
+  },
+  {
+    "id": "case_008",
+    "scenario": "sleeping",
+    "input_type": "text",
+    "event_description": "老人夜间平躺在床上，长时间没有明显移动。",
+    "image_path": "",
+    "ground_truth": {
+      "is_abnormal": false,
+      "event_type": "sleeping",
+      "risk_level": "low",
+      "visual_evidence": "场景符合夜间睡眠状态。",
+      "suggested_action": "无需报警，可继续观察。",
+      "uncertainty": false,
+      "need_rag": false
+    }
+  },
+  {
+    "id": "case_009",
+    "scenario": "chair_slump",
+    "input_type": "text",
+    "event_description": "老人坐在椅子上，上半身突然前倾，随后保持低头姿态很久。",
+    "image_path": "",
+    "ground_truth": {
+      "is_abnormal": true,
+      "event_type": "posture_abnormal",
+      "risk_level": "medium",
+      "visual_evidence": "姿态突然变化并长时间保持异常前倾。",
+      "suggested_action": "建议语音确认老人意识状态，必要时通知护理人员。",
+      "uncertainty": true,
+      "need_rag": true
+    }
+  },
+  {
+    "id": "case_010",
+    "scenario": "multiple_people",
+    "input_type": "text",
+    "event_description": "画面中有两个人，其中一人蹲下捡东西，另一人正常站立。",
+    "image_path": "",
+    "ground_truth": {
+      "is_abnormal": false,
+      "event_type": "normal_multi_person",
+      "risk_level": "low",
+      "visual_evidence": "蹲下动作符合正常行为，不应误判为跌倒。",
+      "suggested_action": "无需报警，但应区分不同人体目标。",
+      "uncertainty": true,
+      "need_rag": false
     }
   }
 ]
