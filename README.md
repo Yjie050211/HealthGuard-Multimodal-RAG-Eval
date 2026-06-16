@@ -374,8 +374,8 @@ results/eval_report.md
 * [X] 实现轻量级 BM25 RAG 检索
 * [X] 设计 VLM / LLM 结构化输出 Prompt
 * [X] 接入 Qwen-VL API 进行多模态事件理解
-* [ ] 生成 `vlm_outputs.jsonl`
-* [ ] 完成 `eval_report.md`
+* [X] 生成 `vlm_outputs.jsonl`
+* [X] 完成 `eval_report.md`
 * [ ] 扩展样本规模至 30–50 条
 * [ ] 补充系统架构图与技术报告
 * [ ] 扩展向量 RAG / LightRAG / GraphRAG 实现
