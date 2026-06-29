@@ -1,0 +1,233 @@
+{
+  "total": 10,
+  "abnormal_accuracy": 0.9,
+  "event_type_accuracy": 0.7,
+  "risk_level_accuracy": 0.8,
+  "false_alarm_rate": 0.3333,
+  "false_positive_count": 1,
+  "normal_total": 3,
+  "precision_abnormal": 0.875,
+  "recall_abnormal": 1.0,
+  "f1_abnormal": 0.9333,
+  "explanation_consistency": 0.6,
+  "explanation_consistency_definition": "event_type match AND risk_level match AND non-empty predicted visual_evidence",
+  "parse_error_count": 0,
+  "confusion_matrix": {
+    "fall": {
+      "fall": 1
+    },
+    "long_static": {
+      "long_static": 1
+    },
+    "occlusion_uncertain": {
+      "occlusion_uncertain": 1
+    },
+    "normal": {
+      "normal": 1
+    },
+    "wandering": {
+      "wandering": 1
+    },
+    "low_visibility_uncertain": {
+      "low_visibility_uncertain": 1
+    },
+    "fall_recovery": {
+      "fall": 1
+    },
+    "sleeping": {
+      "long_static": 1
+    },
+    "posture_abnormal": {
+      "posture_abnormal": 1
+    },
+    "normal_multi_person": {
+      "normal": 1
+    }
+  },
+  "details": [
+    {
+      "id": "case_001",
+      "scenario": "fall",
+      "abnormal_match": true,
+      "event_type_match": true,
+      "risk_level_match": true,
+      "explanation_consistent": true,
+      "mismatched_fields": [],
+      "gt_abnormal": true,
+      "pred_abnormal": true,
+      "gt_event_type": "fall",
+      "pred_event_type": "fall",
+      "gt_risk_level": "high",
+      "pred_risk_level": "high"
+    },
+    {
+      "id": "case_002",
+      "scenario": "long_static",
+      "abnormal_match": true,
+      "event_type_match": true,
+      "risk_level_match": false,
+      "explanation_consistent": false,
+      "mismatched_fields": [
+        "risk_level"
+      ],
+      "gt_abnormal": true,
+      "pred_abnormal": true,
+      "gt_event_type": "long_static",
+      "pred_event_type": "long_static",
+      "gt_risk_level": "medium",
+      "pred_risk_level": "low"
+    },
+    {
+      "id": "case_003",
+      "scenario": "occlusion",
+      "abnormal_match": true,
+      "event_type_match": true,
+      "risk_level_match": true,
+      "explanation_consistent": true,
+      "mismatched_fields": [],
+      "gt_abnormal": true,
+      "pred_abnormal": true,
+      "gt_event_type": "occlusion_uncertain",
+      "pred_event_type": "occlusion_uncertain",
+      "gt_risk_level": "medium",
+      "pred_risk_level": "medium"
+    },
+    {
+      "id": "case_004",
+      "scenario": "normal_activity",
+      "abnormal_match": true,
+      "event_type_match": true,
+      "risk_level_match": true,
+      "explanation_consistent": true,
+      "mismatched_fields": [],
+      "gt_abnormal": false,
+      "pred_abnormal": false,
+      "gt_event_type": "normal",
+      "pred_event_type": "normal",
+      "gt_risk_level": "low",
+      "pred_risk_level": "low"
+    },
+    {
+      "id": "case_005",
+      "scenario": "wandering",
+      "abnormal_match": true,
+      "event_type_match": true,
+      "risk_level_match": true,
+      "explanation_consistent": true,
+      "mismatched_fields": [],
+      "gt_abnormal": true,
+      "pred_abnormal": true,
+      "gt_event_type": "wandering",
+      "pred_event_type": "wandering",
+      "gt_risk_level": "medium",
+      "pred_risk_level": "medium"
+    },
+    {
+      "id": "case_006",
+      "scenario": "weak_light",
+      "abnormal_match": true,
+      "event_type_match": true,
+      "risk_level_match": true,
+      "explanation_consistent": true,
+      "mismatched_fields": [],
+      "gt_abnormal": true,
+      "pred_abnormal": true,
+      "gt_event_type": "low_visibility_uncertain",
+      "pred_event_type": "low_visibility_uncertain",
+      "gt_risk_level": "medium",
+      "pred_risk_level": "medium"
+    },
+    {
+      "id": "case_007",
+      "scenario": "fall_recovery",
+      "abnormal_match": true,
+      "event_type_match": false,
+      "risk_level_match": true,
+      "explanation_consistent": false,
+      "mismatched_fields": [
+        "event_type"
+      ],
+      "gt_abnormal": true,
+      "pred_abnormal": true,
+      "gt_event_type": "fall_recovery",
+      "pred_event_type": "fall",
+      "gt_risk_level": "medium",
+      "pred_risk_level": "medium"
+    },
+    {
+      "id": "case_008",
+      "scenario": "sleeping",
+      "abnormal_match": false,
+      "event_type_match": false,
+      "risk_level_match": false,
+      "explanation_consistent": false,
+      "mismatched_fields": [
+        "is_abnormal",
+        "event_type",
+        "risk_level"
+      ],
+      "gt_abnormal": false,
+      "pred_abnormal": true,
+      "gt_event_type": "sleeping",
+      "pred_event_type": "long_static",
+      "gt_risk_level": "low",
+      "pred_risk_level": "medium"
+    },
+    {
+      "id": "case_009",
+      "scenario": "chair_slump",
+      "abnormal_match": true,
+      "event_type_match": true,
+      "risk_level_match": true,
+      "explanation_consistent": true,
+      "mismatched_fields": [],
+      "gt_abnormal": true,
+      "pred_abnormal": true,
+      "gt_event_type": "posture_abnormal",
+      "pred_event_type": "posture_abnormal",
+      "gt_risk_level": "medium",
+      "pred_risk_level": "medium"
+    },
+    {
+      "id": "case_010",
+      "scenario": "multiple_people",
+      "abnormal_match": true,
+      "event_type_match": false,
+      "risk_level_match": true,
+      "explanation_consistent": false,
+      "mismatched_fields": [
+        "event_type"
+      ],
+      "gt_abnormal": false,
+      "pred_abnormal": false,
+      "gt_event_type": "normal_multi_person",
+      "pred_event_type": "normal",
+      "gt_risk_level": "low",
+      "pred_risk_level": "low"
+    }
+  ],
+  "latency": {
+    "model_latency": "offline_replay_not_api_latency",
+    "retrieval_latency_ms": {
+      "mean": 0.5878,
+      "median": 0.5695,
+      "p95": 0.7409
+    },
+    "total_latency_ms": {
+      "mean": 0.5958,
+      "median": 0.5767,
+      "p95": 0.7509
+    },
+    "includes_network_request": false,
+    "test_count": 10
+  },
+  "run": {
+    "generated_at": "2026-06-29T15:55:39",
+    "mode": "offline_replay",
+    "sample_path": "data/samples.json",
+    "offline_predictions_path": "results/vlm_outputs.jsonl",
+    "knowledge_path": "data/health_knowledge.md",
+    "retrieval_method": "tfidf",
+    "retrieval_top_k": 3
+  }
+}

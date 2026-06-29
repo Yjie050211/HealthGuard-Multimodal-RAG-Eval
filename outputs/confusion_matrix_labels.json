@@ -1,0 +1,15 @@
+{
+  "note": "PNG uses numeric class indexes because no plotting/font dependency is required.",
+  "labels": {
+    "1": "fall",
+    "2": "fall_recovery",
+    "3": "long_static",
+    "4": "low_visibility_uncertain",
+    "5": "normal",
+    "6": "normal_multi_person",
+    "7": "occlusion_uncertain",
+    "8": "posture_abnormal",
+    "9": "sleeping",
+    "10": "wandering"
+  }
+}

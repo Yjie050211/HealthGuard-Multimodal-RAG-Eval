@@ -1,3 +1,5 @@
+# ---------- 事件理解 Prompt（给 VLM 用的 system + user 对） ----------
+
 EVENT_UNDERSTANDING_SYSTEM_PROMPT = """
 你是一个面向健康监护场景的多模态异常事件理解助手。
 你的任务是根据输入的事件描述或图像信息，判断是否存在异常事件，并给出结构化输出。
@@ -28,6 +30,8 @@ EVENT_UNDERSTANDING_USER_PROMPT = """
   "uncertainty": true/false
 }}
 """
+
+# ---------- RAG 问答 Prompt（给 LLM + 检索知识库用的） ----------
 
 RAG_QA_SYSTEM_PROMPT = """
 你是健康监护场景下的可信问答助手。

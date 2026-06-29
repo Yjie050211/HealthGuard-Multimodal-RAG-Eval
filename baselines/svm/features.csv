@@ -1,0 +1,11 @@
+sample_id,label_is_abnormal,event_type,risk_level,char_length,digit_count,has_time_signal,has_uncertainty_signal,fall_keyword_count,static_keyword_count,night_keyword_count,bed_sleep_keyword_count,occlusion_keyword_count,low_visibility_keyword_count,wandering_keyword_count,multi_person_keyword_count,recovery_keyword_count,posture_keyword_count
+case_001,1,fall,high,23,0,1,0,1,1,0,0,0,0,0,0,1,0
+case_002,1,long_static,medium,26,0,1,0,0,1,0,0,0,0,0,0,0,1
+case_003,1,occlusion_uncertain,medium,31,0,0,1,0,0,0,0,4,0,0,0,0,1
+case_004,0,normal,low,22,0,0,0,0,0,0,0,0,0,0,0,0,0
+case_005,1,wandering,medium,27,2,1,0,0,0,1,0,0,0,3,0,0,0
+case_006,1,low_visibility_uncertain,medium,28,0,0,1,0,0,2,0,0,3,0,0,0,1
+case_007,1,fall_recovery,medium,22,0,0,1,1,0,0,0,0,0,0,0,2,0
+case_008,0,sleeping,low,20,0,1,0,0,2,1,2,0,0,0,0,0,0
+case_009,1,posture_abnormal,medium,27,0,0,0,0,1,0,0,0,0,0,0,0,3
+case_010,0,normal_multi_person,low,26,0,0,0,0,0,0,0,0,0,0,2,0,0

@@ -1,0 +1,7 @@
+{
+  "note": "PNG uses numeric class indexes because no plotting/font dependency is required.",
+  "labels": {
+    "1": "abnormal",
+    "2": "normal"
+  }
+}

@@ -1,14 +1,15 @@
 import json
 from openai import OpenAI
 
-from config import API_KEY, BASE_URL, VLM_MODEL, LLM_MODEL
+from config import BASE_URL, VLM_MODEL, LLM_MODEL, require_api_key
 from prompts import EVENT_UNDERSTANDING_SYSTEM_PROMPT, EVENT_UNDERSTANDING_USER_PROMPT
 
 
-client = OpenAI(
-    api_key=API_KEY,
-    base_url=BASE_URL
-)
+def create_client() -> OpenAI:
+    return OpenAI(
+        api_key=require_api_key(),
+        base_url=BASE_URL
+    )
 
 
 def safe_json_loads(text: str) -> dict:
@@ -32,23 +33,25 @@ def safe_json_loads(text: str) -> dict:
 
 def analyze_event_with_llm(event_description: str, model: str = None) -> dict:
     """
-    # 路线 A 的低成本版本：
+    路线 A 的低成本版本：
     先用文本化事件描述调用 LLM/VLM API，验证结构化输出流程。
     后续如果有图像，再扩展 image_url / base64 输入。
     """
+    # 默认走 VLM_MODEL（qwen-vl-plus），纯文本时其实 LLM_MODEL 就够了
     model = model or VLM_MODEL
 
     user_prompt = EVENT_UNDERSTANDING_USER_PROMPT.format(
         event_description=event_description
     )
 
+    client = create_client()
     response = client.chat.completions.create(
         model=model,
         messages=[
             {"role": "system", "content": EVENT_UNDERSTANDING_SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt}
         ],
-        temperature=0.2
+        temperature=0.2  # 低温度保证结构化输出的稳定性
     )
 
     content = response.choices[0].message.content

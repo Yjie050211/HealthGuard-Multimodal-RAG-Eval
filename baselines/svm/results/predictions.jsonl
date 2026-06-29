@@ -1,0 +1,3 @@
+{"sample_id": "case_010", "true_is_abnormal": false, "pred_is_abnormal": false, "correct": true}
+{"sample_id": "case_003", "true_is_abnormal": true, "pred_is_abnormal": true, "correct": true}
+{"sample_id": "case_006", "true_is_abnormal": true, "pred_is_abnormal": true, "correct": true}

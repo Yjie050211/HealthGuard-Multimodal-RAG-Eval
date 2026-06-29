@@ -1,181 +1,105 @@
-# HealthGuard-Multimodal-RAG-Eval
+# CareEvent-VLM-RAG-Eval
 
-面向健康监护场景的多模态异常事件理解与可信问答评测原型系统
-A lightweight prototype for multimodal abnormal event understanding and RAG-based trustworthy QA in health monitoring scenarios.
+面向健康监护场景的多模态异常事件理解与可信问答评测原型。
 
----
+当前版本是一个**实验性、离线可复现的小规模原型**，不是临床系统，也不是生产级医疗告警系统。项目重点是把异常事件从简单分类扩展为结构化回答，并对回答进行可追溯评测和失败案例分析。
 
-## 1. 项目简介
+## 1. 当前真实进度
 
-本项目面向居家养老与远程健康监护场景，围绕跌倒、长时间静止、异常徘徊、遮挡误判、弱光误判等典型异常事件，构建一个轻量级的多模态异常事件理解与可信问答评测原型系统。
+| 模块 | 状态 | 说明 |
+|---|---|---|
+| 样例数据 | 已小规模构建 | 10 条文本化模拟健康监护事件样例，不含真实图像/视频 |
+| 多模态/大模型解释 | 已小规模验证 | 已保存一次 Qwen 兼容 API 输出到 `results/vlm_outputs.jsonl`；当前离线评测默认回放该文件 |
+| 健康知识库 | 已小规模构建 | `data/health_knowledge.md` 含 24 条演示知识条目 |
+| RAG 检索 | 已实现轻量版 | 本地 TF-IDF 字符向量检索，BM25 可回退；无向量数据库 |
+| 结构化回答 | 已实现离线版 | 输出异常类型、视觉证据、风险等级、建议和知识引用 |
+| 评测指标 | 已实现基础版 | accuracy、误报率、precision/recall/F1、字段一致性、离线延迟 |
+| 失败案例 | 已实现基础版 | 从真实预测与标注不一致的样本自动生成 |
+| SVM baseline | 已小规模验证 | 使用可解释文本特征 + `StandardScaler` + scikit-learn `SVC`；不是从零实现 SVM 求解器 |
+| ST-GCN baseline | 尚未实现 | 当前仅适合表述为方法调研/后续开源复现计划 |
+| GraphRAG | 尚未实现完整系统 | 当前只能表述为参考 GraphRAG 做知识组织探索 |
 
-项目基于国家级大创“中云智护”的应用背景，当前重点聚焦算法侧预研，不依赖深度相机、激光雷达或机器人实物硬件，而是通过公开图像/视频样例、模拟事件数据和健康监护知识库，完成以下流程验证：
-
-* 异常事件识别
-* 多模态语义解释
-* 健康监护知识检索
-* 结构化问答评测
-* 误差分析与可追溯性评估
-
-项目目标是让健康监护系统从简单的“是否异常”分类判断，扩展为可解释、可追溯、可评测的健康监护决策支持原型。
-
----
-
-## 2. 研究动机
-
-传统健康监护系统通常侧重异常检测结果，例如判断“是否跌倒”或“是否长时间静止”。但在真实应用场景中，仅有分类结果远远不够，系统还需要回答：
-
-1. 发生了什么异常？
-2. 为什么判断为异常？
-3. 当前风险等级如何？
-4. 是否需要报警或二次确认？
-5. 处理建议是否有知识依据？
-6. 多模态大模型是否存在幻觉、误判或过度判断？
-
-因此，本项目尝试将多模态大模型、RAG / GraphRAG 思路与健康监护场景结合，探索异常事件从分类识别到可信问答决策支持的实现路径。
-
----
-
-## 3. 核心任务
-
-本项目围绕以下任务展开：
-
-| 任务           | 说明                                                       |
-| -------------- | ---------------------------------------------------------- |
-| 异常事件建模   | 构建跌倒、长时间静止、异常徘徊、遮挡、弱光等典型场景样本   |
-| 多模态事件理解 | 使用 Qwen-VL / VideoLLaMA 等多模态大模型生成结构化异常解释 |
-| 健康知识检索   | 构建健康监护知识库，使用 RAG 检索相关处置规则              |
-| 可信问答生成   | 基于检索知识生成可追溯的处理建议                           |
-| 对比实验评测   | 对比传统 baseline、纯 VLM、VLM + RAG 等方法                |
-| 误差分析       | 分析遮挡、弱光、多人场景、长时间静止等易错情况             |
-
----
-
-## 4. 技术路线
+## 2. 项目结构
 
 ```text
-公开图像/视频样例 + 模拟事件数据
-        ↓
-健康监护异常事件样本构建
-        ↓
-结构化标注
-异常类型 / 风险等级 / 视觉证据 / 处理建议
-        ↓
-传统 baseline 与多模态大模型对比
-Rule / ST-GCN / SVM / Qwen-VL / VideoLLaMA
-        ↓
-健康监护知识库检索
-RAG / LightRAG / GraphRAG 思路
-        ↓
-结构化可信问答
-异常类型 / 原因解释 / 风险等级 / 处理建议 / 知识依据
-        ↓
-评测与误差分析
-准确性 / 解释一致性 / 可追溯性 / 误报分析 / 推理延迟
-```
-
----
-
-## 5. 系统架构
-
-```text
-HealthGuard-Multimodal-RAG-Eval
-│
-├── Data Layer
-│   ├── Public image/video samples
-│   ├── Simulated event descriptions
-│   └── Health monitoring knowledge base
-│
-├── Event Understanding Layer
-│   ├── Rule baseline
-│   ├── ST-GCN / SVM baseline
-│   └── Vision-Language Model
-│
-├── Knowledge Retrieval Layer
-│   ├── BM25 retrieval
-│   ├── Vector RAG
-│   └── LightRAG / GraphRAG extension
-│
-├── Trustworthy QA Layer
-│   ├── Risk-level reasoning
-│   ├── Evidence-grounded answer generation
-│   └── Traceable suggestion generation
-│
-└── Evaluation Layer
-    ├── Abnormal detection accuracy
-    ├── Event type accuracy
-    ├── Risk level consistency
-    ├── Explanation consistency
-    ├── Knowledge traceability
-    └── Error analysis
-```
-
----
-
-## 6. 项目目录结构
-
-```text
-HealthGuard-Multimodal-RAG-Eval/
-├── README.md
+CareEvent-VLM-RAG-Eval/
+├── config.yaml
+├── run_eval.py
 ├── requirements.txt
-├── .gitignore
 ├── .env.example
-│
 ├── data/
 │   ├── samples.json
 │   ├── health_knowledge.md
-│   ├── label_schema.md
-│   └── sample_images/
-│       └── README.md
-│
+│   ├── care_knowledge.md
+│   └── label_schema.md
 ├── src/
 │   ├── config.py
-│   ├── prompts.py
 │   ├── vlm_client.py
 │   ├── rag_pipeline.py
 │   ├── evaluator.py
-│   ├── run_rag_demo.py
-│   └── run_full_pipeline.py
-│
+│   ├── run_full_pipeline.py
+│   └── run_rag_demo.py
+├── outputs/
+│   ├── predictions.jsonl
+│   ├── metrics.json
+│   ├── latency.csv
+│   ├── failure_cases.md
+│   └── confusion_matrix.png
 ├── results/
 │   ├── vlm_outputs.jsonl
-│   ├── rag_outputs.jsonl
 │   ├── eval_report.md
 │   └── ablation_table.md
-│
-├── docs/
-│   ├── research_plan.md
-│   ├── system_architecture.md
-│   ├── error_analysis.md
-│   ├── interview_qa.md
-│   └── project_log.md
-│
-└── assets/
-    └── architecture.png
+├── baselines/
+│   ├── svm/
+│   └── st_gcn/
+└── docs/
+    ├── audit_report.md
+    ├── dataset_card.md
+    ├── error_analysis.md
+    ├── interview_qa.md
+    ├── ppt_truthfulness_review.md
+    └── plans/
 ```
 
----
+## 3. 环境安装
 
-## 7. 数据标注字段
+```bash
+python -m venv .venv
+```
 
-每条样本包含以下字段：
+Windows PowerShell:
 
-| 字段              | 含义                                          |
-| ----------------- | --------------------------------------------- |
-| id                | 样本编号                                      |
-| scenario          | 场景类型                                      |
-| input_type        | 输入类型，例如 text、image、video_description |
-| event_description | 事件描述                                      |
-| image_path        | 可选图像路径                                  |
-| is_abnormal       | 是否异常                                      |
-| event_type        | 异常类型                                      |
-| risk_level        | 风险等级：low / medium / high                 |
-| visual_evidence   | 判断依据                                      |
-| suggested_action  | 处理建议                                      |
-| uncertainty       | 是否存在不确定性                              |
-| need_rag          | 是否需要知识库辅助                            |
+```powershell
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-示例：
+当前验证环境：
+
+```text
+Python 3.14.5
+openai 2.41.0
+rank-bm25 0.2.2
+scikit-learn 1.9.0
+```
+
+## 4. API Key 配置
+
+离线评测不需要 API Key。
+
+如果需要重新调用 Qwen 兼容 API：
+
+```powershell
+Copy-Item .env.example .env
+```
+
+然后在 `.env` 中填写自己的密钥。`.env.example` 只保留占位符，不应写入真实密钥。
+
+## 5. 数据格式
+
+当前数据位于 `data/samples.json`，共 10 条，均为模拟文本事件描述。
+
+核心字段：
 
 ```json
 {
@@ -196,199 +120,112 @@ HealthGuard-Multimodal-RAG-Eval/
 }
 ```
 
----
+数据说明见 `docs/dataset_card.md`。
 
-## 8. 当前支持的异常场景
+## 6. 一键离线运行
 
-| 场景                     | 说明                       |
-| ------------------------ | -------------------------- |
-| fall                     | 跌倒事件                   |
-| fall_recovery            | 跌倒后自行恢复             |
-| long_static              | 长时间静止                 |
-| wandering                | 异常徘徊                   |
-| occlusion_uncertain      | 遮挡导致的不确定判断       |
-| low_visibility_uncertain | 弱光或模糊导致的不确定判断 |
-| posture_abnormal         | 坐姿、卧姿或身体姿态异常   |
-| normal_activity          | 正常日常活动               |
-| sleeping                 | 正常睡眠                   |
-| normal_multi_person      | 多人场景下的正常行为       |
-
----
-
-## 9. 快速开始
-
-### 9.1 克隆项目
+推荐用于展示和复现：
 
 ```bash
-git clone https://github.com/your-username/HealthGuard-Multimodal-RAG-Eval.git
-cd HealthGuard-Multimodal-RAG-Eval
+python run_eval.py --config config.yaml
 ```
 
-### 9.2 创建虚拟环境
+该命令不会访问网络。它会读取：
 
-```bash
-python -m venv .venv
-```
+- `data/samples.json`
+- `results/vlm_outputs.jsonl`
+- `data/health_knowledge.md`
 
-Windows：
-
-```bash
-.venv\Scripts\activate
-```
-
-macOS / Linux：
-
-```bash
-source .venv/bin/activate
-```
-
-### 9.3 安装依赖
-
-```bash
-pip install -r requirements.txt
-```
-
-### 9.4 配置 API Key
-
-复制 `.env.example` 为 `.env`：
-
-```bash
-cp .env.example .env
-```
-
-Windows PowerShell：
-
-```powershell
-Copy-Item .env.example .env
-```
-
-在 `.env` 中填写：
-
-```env
-API_KEY=your_api_key_here
-BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
-VLM_MODEL=qwen-vl-plus
-LLM_MODEL=qwen-plus
-```
-
----
-
-## 10. 运行示例
-
-### 10.1 运行健康知识库检索
-
-```bash
-python src/rag_pipeline.py
-```
-
-示例输出：
+并生成：
 
 ```text
-SCORE: 8.2145
-跌倒属于高风险异常事件。如果老人由站立、行走或坐姿突然转为地面卧倒，并且长时间未恢复站立，应优先进行二次确认。
+outputs/
+├── predictions.jsonl
+├── metrics.json
+├── latency.csv
+├── failure_cases.md
+├── confusion_matrix.png
+├── confusion_matrix_labels.json
+└── eval_report.md
 ```
 
-### 10.2 运行 RAG 问答 Demo
+## 7. 当前结果
 
-```bash
-python src/run_rag_demo.py
-```
+基于 10 条样例与已有真实预测文件，当前离线复算结果为：
 
-示例问题：
+| 指标 | 数值 |
+|---|---:|
+| Abnormal detection accuracy | 0.9 |
+| Event type accuracy | 0.7 |
+| Risk level accuracy | 0.8 |
+| False alarm rate | 0.3333 |
+| Precision abnormal | 0.875 |
+| Recall abnormal | 1.0 |
+| F1 abnormal | 0.9333 |
+| Explanation consistency | 0.6 |
+| Parse error count | 0 |
+
+误报率口径：
 
 ```text
-检测到老人疑似跌倒后，系统应该如何处理？
+实际正常但被判断为异常的样本数 / 实际正常样本总数
 ```
 
-输出内容包括：
+当前 3 条正常样本中有 1 条被误报为异常：`case_008`。
 
-* 检索到的知识片段
-* 基于知识库生成的回答
-* 风险提醒
-* 是否可追溯
+## 8. 失败案例
 
-### 10.3 运行完整评测流程
+真实失败案例来自 `results/vlm_outputs.jsonl` 与 `data/samples.json` 的字段对比，见 `outputs/failure_cases.md` 和 `docs/error_analysis.md`。
+
+当前主要失败：
+
+- `case_002`：长时间静止风险等级偏低。
+- `case_007`：短暂跌倒后恢复被归为普通跌倒。
+- `case_008`：正常睡眠被误判为长时间静止异常。
+- `case_010`：多人正常场景被简化为 normal，丢失细分类别。
+
+## 9. 当前限制
+
+- 样本量只有 10 条，不能支撑统计意义上的模型结论。
+- 输入是文本化事件描述，不是真实图像或视频。
+- 离线评测回放已有 API 输出，不能代表实时 API 延迟。
+- RAG 使用本地 TF-IDF/BM25 检索，没有接入向量数据库。
+- GraphRAG、图数据库、动态图增量计算、分布式图计算均未实现。
+- SVM 只完成了极小样本文本特征二分类流程验证，测试集只有 3 条，不能作为可靠模型效果。
+- ST-GCN baseline 尚未在当前代码中完成。
+- 结果仅用于项目展示和方法训练，不可用于真实医疗决策。
+
+## 10. SVM 小规模基线
+
+运行：
 
 ```bash
-python src/run_full_pipeline.py
+python baselines/svm/extract_features.py
+python baselines/svm/train_svm.py
+python baselines/svm/evaluate_svm.py
 ```
 
-运行后会生成：
+输出：
 
 ```text
-results/vlm_outputs.jsonl
-results/eval_report.md
+baselines/svm/
+├── features.csv
+├── model.pkl
+├── split.json
+└── results/
+    ├── predictions.jsonl
+    ├── metrics.json
+    └── confusion_matrix.png
 ```
 
----
+当前 SVM 使用文本描述的可解释数值特征，标签为 `ground_truth.is_abnormal`。它使用 scikit-learn `SVC`，不是从零实现 SVM 优化求解器。由于样本极少，指标只说明流程可运行。
 
-## 11. 评测指标
+## 11. AI 辅助与开源说明
 
-本项目初步使用以下指标：
+本项目代码和文档整理过程中使用了 AI 辅助。应诚实表述为：
 
-| 指标                        | 含义                             |
-| --------------------------- | -------------------------------- |
-| Abnormal Detection Accuracy | 是否正确判断异常                 |
-| Event Type Accuracy         | 是否正确识别异常类型             |
-| Risk Level Accuracy         | 是否正确判断风险等级             |
-| Explanation Consistency     | 解释是否与事件描述一致           |
-| Knowledge Traceability      | 回答是否能追溯到知识库依据       |
-| Parse Error Count           | 模型结构化 JSON 输出解析错误次数 |
-| False Alarm Analysis        | 误报与过度判断分析               |
-| Inference Latency           | 推理延迟                         |
-
----
-
-## 12. 对比实验设计
-
-| 方法                      | 异常判断 | 解释能力 | 可追溯性 | 误报分析 | 推理成本 | 当前状态         |
-| ------------------------- | -------- | -------- | -------- | -------- | -------- | ---------------- |
-| Rule Baseline             | 中       | 弱       | 无       | 弱       | 低       | 已设计           |
-| ST-GCN / SVM Baseline     | 中       | 弱       | 无       | 中       | 中       | 作为传统方法对比 |
-| Pure VLM                  | 中高     | 中       | 无       | 中       | 中       | API 原型验证     |
-| VLM + BM25 RAG            | 中高     | 较强     | 中       | 较强     | 中       | 轻量版实现       |
-| VLM + LightRAG / GraphRAG | 预期较强 | 强       | 强       | 强       | 中高     | 后续扩展         |
-
----
-
-## 13. 初步误差分析方向
-
-本项目重点关注以下易错场景：
-
-1. 正常休息被误判为长时间静止风险
-2. 遮挡导致跌倒误判
-3. 弱光下模型输出过度自信
-4. 多人场景中蹲下、弯腰等正常动作被误判为跌倒
-5. 短暂跌倒后自行恢复的风险等级不稳定
-6. RAG 检索到语义不匹配的知识片段
-7. 模型生成缺乏依据的处理建议
-
----
-
-## 14. 当前进度
-
-* [X] 明确项目选题与技术路线
-* [X] 完成异常事件标注字段设计
-* [X] 构建健康监护知识库初版
-* [X] 构建小规模模拟事件样本
-* [X] 实现轻量级 BM25 RAG 检索
-* [X] 设计 VLM / LLM 结构化输出 Prompt
-* [X] 接入 Qwen-VL API 进行多模态事件理解
-* [ ] 生成 `vlm_outputs.jsonl`
-* [ ] 完成 `eval_report.md`
-* [ ] 扩展样本规模至 30–50 条
-* [ ] 补充系统架构图与技术报告
-* [ ] 扩展向量 RAG / LightRAG / GraphRAG 实现
-
----
-
-## 15. 项目特点
-
-本项目的重点不在于训练大模型，而在于构建一个轻量、可复现、可解释的算法侧评测原型。主要特点包括：
-
-* 不依赖真实硬件设备
-* 适合短期快速复现与展示
-* 聚焦健康监护垂直场景
-* 强调结构化输出与可追溯问答
-* 引入 baseline 对比、指标设计和误差分析
-* 可扩展到真实图像、视频和传感器数据
+- 本人负责问题定义、字段设计、流程拆解、实验口径确认、运行验证和结果分析。
+- AI 辅助生成和整理了部分脚本、文档、Prompt、工具函数和调试代码。
+- 当前 SVM/ST-GCN 没有从零实现，也没有成熟训练结果。
+- `rank-bm25`、`scikit-learn`、`openai` 等依赖为开源库或官方 SDK。
+- 所有可展示结果应以当前代码和输出文件为准。

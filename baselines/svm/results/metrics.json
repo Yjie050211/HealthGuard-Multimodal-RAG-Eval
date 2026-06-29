@@ -1,0 +1,53 @@
+{
+  "implementation": "scikit-learn SVC; not a from-scratch SVM solver",
+  "label": "ground_truth.is_abnormal",
+  "train_ids": [
+    "case_007",
+    "case_008",
+    "case_004",
+    "case_002",
+    "case_001",
+    "case_009",
+    "case_005"
+  ],
+  "test_ids": [
+    "case_010",
+    "case_003",
+    "case_006"
+  ],
+  "feature_columns": [
+    "char_length",
+    "digit_count",
+    "has_time_signal",
+    "has_uncertainty_signal",
+    "fall_keyword_count",
+    "static_keyword_count",
+    "night_keyword_count",
+    "bed_sleep_keyword_count",
+    "occlusion_keyword_count",
+    "low_visibility_keyword_count",
+    "wandering_keyword_count",
+    "multi_person_keyword_count",
+    "recovery_keyword_count",
+    "posture_keyword_count"
+  ],
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "confusion_matrix_labels": [
+    "normal",
+    "abnormal"
+  ],
+  "confusion_matrix": [
+    [
+      1,
+      0
+    ],
+    [
+      0,
+      2
+    ]
+  ],
+  "note": "Only 10 simulated text samples are available; this is a runnable baseline sanity check, not a reliable model result."
+}

@@ -1,0 +1,9 @@
+mode: offline_replay
+sample_path: data/samples.json
+offline_predictions_path: results/vlm_outputs.jsonl
+knowledge_path: data/health_knowledge.md
+output_dir: outputs
+retrieval_method: tfidf
+retrieval_top_k: 3
+include_network_latency: false
+random_seed: 42

@@ -18,6 +18,7 @@ def run_vlm_on_samples():
 
     predictions = []
 
+    # 逐条推，结果边跑边写 JSONL（一行一个 JSON），断了也能保留已跑完的
     with output_path.open("w", encoding="utf-8") as f:
         for sample in tqdm(samples, desc="Running VLM/LLM evaluation"):
             pred = analyze_event_with_llm(sample["event_description"])
@@ -37,6 +38,7 @@ def run_vlm_on_samples():
 
 
 def main():
+    # 三步走：VLM 批量推理 → 评测 → 出报告
     samples, predictions = run_vlm_on_samples()
     metrics = evaluate_predictions(samples, predictions)
 

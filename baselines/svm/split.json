@@ -1,0 +1,34 @@
+{
+  "random_seed": 42,
+  "train_ids": [
+    "case_007",
+    "case_008",
+    "case_004",
+    "case_002",
+    "case_001",
+    "case_009",
+    "case_005"
+  ],
+  "test_ids": [
+    "case_010",
+    "case_003",
+    "case_006"
+  ],
+  "label": "ground_truth.is_abnormal",
+  "feature_columns": [
+    "char_length",
+    "digit_count",
+    "has_time_signal",
+    "has_uncertainty_signal",
+    "fall_keyword_count",
+    "static_keyword_count",
+    "night_keyword_count",
+    "bed_sleep_keyword_count",
+    "occlusion_keyword_count",
+    "low_visibility_keyword_count",
+    "wandering_keyword_count",
+    "multi_person_keyword_count",
+    "recovery_keyword_count",
+    "posture_keyword_count"
+  ]
+}
